@@ -58,6 +58,30 @@ const AdBanner: React.FC = () => (
   </div>
 );
 
+/**
+ * Reusable AdSense Component for the bottom slot
+ */
+const AdSenseBottom: React.FC = () => {
+  useEffect(() => {
+    try {
+      // @ts-ignore
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (e) {
+      console.error("AdSense error", e);
+    }
+  }, []);
+
+  return (
+    <div className="ad-bottom mt-8 text-center">
+      <ins className="adsbygoogle"
+           style={{ display: 'block' }}
+           data-ad-client="ca-pub-9774042341049510"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+  );
+};
+
 const Header: React.FC = () => {
   const [search, setSearch] = useState('');
   
@@ -168,6 +192,18 @@ const GamePlayerView: React.FC = () => {
   const navigate = useNavigate();
   const game = GAMES.find(g => g.id === id);
 
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'f' || e.key === 'F') {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
+
   if (!game) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[80vh]">
@@ -195,8 +231,23 @@ const GamePlayerView: React.FC = () => {
           <h1 className="text-lg font-bold truncate">{game.title}</h1>
         </div>
         <div className="flex gap-2">
-          <button className="bg-blue-600 px-4 py-2 rounded text-xs font-bold uppercase tracking-wider">FULLSCREEN</button>
+          <button onClick={() => document.documentElement.requestFullscreen()} className="bg-blue-600 px-4 py-2 rounded text-xs font-bold uppercase tracking-wider">FULLSCREEN</button>
           <button className="bg-gray-800 px-4 py-2 rounded text-xs font-bold uppercase tracking-wider">REPORT</button>
+        </div>
+      </div>
+      
+      {/* Mobile & Optimization Section */}
+      <div className="p-6 bg-gray-900">
+        <div className="text-center text-white bg-purple-800 p-4 rounded-lg mb-6 max-w-md mx-auto shadow-md">
+          Tip: Rotate to landscape mode for better mobile experience! Perfect on phone or Chromebook.
+        </div>
+
+        <button onClick={() => document.documentElement.requestFullscreen()} className="block mx-auto bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl text-xl mb-6 shadow-lg transform transition active:scale-95">
+          Play Full Screen (Press F - Ultimate Experience!)
+        </button>
+
+        <div className="text-center text-white bg-blue-800 p-4 rounded-lg mb-6 max-w-lg mx-auto shadow-md">
+          Press F for fullscreen - No lag, full immersion on any device!
         </div>
       </div>
       
@@ -224,11 +275,14 @@ const GamePlayerView: React.FC = () => {
           </div>
 
           {/* Strategy Section */}
-          <div className="strategy mt-8 text-gray-300 p-4 bg-gray-800 rounded-lg">
+          <div className="strategy mt-8 text-gray-300 p-4 bg-gray-800 rounded-lg border border-gray-700">
             Prepare to rage in this rhythm-based platformer. Geometry Dash Unblocked 2025 is famous for its brutal difficulty and energetic electronic soundtrack. With just one button (Click or Space), guide your cube over spikes and obstacles. Every failure means starting from the beginning, testing your memory, rhythm, and patience.
             <br/><br/>
             Walkthrough Secret: The music is your guide. Every jump is synced to the beat. If you play without sound, the game becomes twice as hard. Use Practice Mode to place checkpoints and learn the level layout before attempting a real run. Don't let the crash count discourage you; that's the charm of Geometry Dash. No Steam download needed—challenge your rhythm limits online now!
           </div>
+
+          {/* New AdSense Slot Below Strategy */}
+          <AdSenseBottom />
 
           {/* Internal Links Section */}
           <div className="other-games mt-8 bg-gray-900 p-6 rounded-lg shadow-lg border border-gray-700">

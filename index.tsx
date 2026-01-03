@@ -13,7 +13,8 @@ interface State {
   error?: Error;
 }
 
-class ErrorBoundary extends Component<Props, State> {
+// Fix: Explicitly extend React.Component to ensure 'props' is correctly typed and available on the class instance
+class ErrorBoundary extends React.Component<Props, State> {
   public state: State = {
     hasError: false
   };
